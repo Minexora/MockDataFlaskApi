@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  nginx:
+    build: ./nginx
+    restart: always
+    depends_on:
+      - web
+    networks:
+      - my-network
+    ports:
+      - 1338:80
+
+  web:
+    build: .
+    command: python main.py
+    restart: always
+    volumes:
+      - ./:/code
+    env_file:
+      - .env
+    networks:
+      - my-network
+    ports:
+      - 8080:8080
